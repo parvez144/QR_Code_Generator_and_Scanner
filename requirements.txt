@@ -1,0 +1,10 @@
+# AirQR — WiFi QR Code Generator & Scanner
+# ----------------------------------------
+# This project uses only Python's standard library packages (http.server, socketserver, webbrowser, etc.).
+# Therefore, there are NO external Python dependencies or pip packages required to run this project.
+#
+# Requirements:
+# - Python 3.7 or higher
+#
+# How to run:
+#   python server.py

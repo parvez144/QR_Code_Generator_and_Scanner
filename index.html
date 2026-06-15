@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPK QR — Secure QR Code Generator & Scanner</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="glow-bg"></div>
+    <div class="glow-bg second"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="ti ti-qrcode"></i>
+                    <i class="ti ti-scan logo-qr-overlay"></i>
+                </div>
+                <div>
+                    <h1>SPK QR</h1>
+                    <p class="subtitle">Secure QR Code Generator & Scanner</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="btn-icon" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                    <i class="ti ti-sun icon-light"></i>
+                    <i class="ti ti-moon icon-dark"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Tabs -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="generate">
+                <i class="ti ti-qrcode"></i>
+                <span>Generate QR Code</span>
+            </button>
+            <button class="tab-btn" data-tab="scan">
+                <i class="ti ti-scan"></i>
+                <span>Scan & Decode QR</span>
+            </button>
+            <button class="tab-btn" data-tab="history">
+                <i class="ti ti-history"></i>
+                <span>Saved Profiles</span>
+            </button>
+        </div>
+
+        <main class="main-content">
+            <!-- TAB 1: GENERATE -->
+            <section id="tab-generate" class="tab-content active">
+                <div class="workspace-grid">
+                    <!-- Left Column: Settings and Customization -->
+                    <div class="settings-column">
+                        <!-- Card 1: QR Content & Type -->
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <span class="badge">Step 1</span>
+                                <h2>QR Content & Type</h2>
+                            </div>
+                            
+                            <!-- Type Selector -->
+                            <div class="form-group margin-bottom-md">
+                                <label>Select QR Code Type</label>
+                                <div class="type-presets" id="qr-type-presets">
+                                    <label class="preset-option">
+                                        <input type="radio" name="qr-type" value="wifi" checked>
+                                        <span class="preset-box"><i class="ti ti-wifi"></i>WiFi</span>
+                                    </label>
+                                    <label class="preset-option">
+                                        <input type="radio" name="qr-type" value="url">
+                                        <span class="preset-box"><i class="ti ti-link"></i>Link</span>
+                                    </label>
+                                    <label class="preset-option">
+                                        <input type="radio" name="qr-type" value="text">
+                                        <span class="preset-box"><i class="ti ti-notes"></i>Text</span>
+                                    </label>
+                                    <label class="preset-option">
+                                        <input type="radio" name="qr-type" value="contact">
+                                        <span class="preset-box"><i class="ti ti-user-pin"></i>Contact</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- WiFi Inputs Group -->
+                            <div id="group-wifi" class="qr-type-group">
+                                <div class="form-group">
+                                    <label for="wifi-ssid">Network Name (SSID)</label>
+                                    <div class="input-wrapper">
+                                        <i class="ti ti-wifi input-icon"></i>
+                                        <input type="text" id="wifi-ssid" placeholder="Enter network name" value="My WiFi Network" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" id="password-group">
+                                    <label for="wifi-password">Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="ti ti-lock input-icon"></i>
+                                        <input type="password" id="wifi-password" placeholder="Enter password" value="supersecure123" autocomplete="off">
+                                        <button type="button" id="toggle-password-visibility" class="password-toggle-btn" title="Toggle Password Visibility">
+                                            <i class="ti ti-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="wifi-security">Security Type</label>
+                                        <div class="select-wrapper">
+                                            <i class="ti ti-shield-lock select-icon"></i>
+                                            <select id="wifi-security">
+                                                <option value="WPA" selected>WPA/WPA2/WPA3</option>
+                                                <option value="WEP">WEP</option>
+                                                <option value="nopass">None (Open)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group half flex-center">
+                                        <label class="checkbox-container">
+                                            <input type="checkbox" id="wifi-hidden">
+                                            <span class="checkmark"></span>
+                                            Hidden Network
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Website URL Inputs Group -->
+                            <div id="group-url" class="qr-type-group hidden">
+                                <div class="form-group">
+                                    <label for="qr-url">Website URL</label>
+                                    <div class="input-wrapper">
+                                        <i class="ti ti-link input-icon"></i>
+                                        <input type="text" id="qr-url" placeholder="https://example.com" value="https://shahriar.xyz" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Plain Text Inputs Group -->
+                            <div id="group-text" class="qr-type-group hidden">
+                                <div class="form-group">
+                                    <label for="qr-text">Plain Text Content</label>
+                                    <textarea id="qr-text" rows="4" placeholder="Type your text here..." class="custom-textarea">Hello from SPK QR!</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Contact Card Inputs Group (vCard) -->
+                            <div id="group-contact" class="qr-type-group hidden">
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="contact-first-name">First Name</label>
+                                        <input type="text" id="contact-first-name" placeholder="Shahriar" value="Shahriar" autocomplete="off" class="contact-input">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label for="contact-last-name">Last Name</label>
+                                        <input type="text" id="contact-last-name" placeholder="Parvez" value="Parvez" autocomplete="off" class="contact-input">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="contact-phone">Phone Number</label>
+                                        <input type="text" id="contact-phone" placeholder="+880 1234 5678" value="+880 1234 5678" autocomplete="off" class="contact-input">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label for="contact-email">Email Address</label>
+                                        <input type="text" id="contact-email" placeholder="shahriar@example.com" value="shahriar@example.com" autocomplete="off" class="contact-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-website">Website</label>
+                                    <input type="text" id="contact-website" placeholder="https://shahriar.xyz" value="https://shahriar.xyz" autocomplete="off" class="contact-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-address">Address</label>
+                                    <input type="text" id="contact-address" placeholder="Dhaka, Bangladesh" value="Dhaka, Bangladesh" autocomplete="off" class="contact-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Customization Accordions -->
+                        <div class="glass-card style-customizer">
+                            <div class="card-header">
+                                <span class="badge">Step 2</span>
+                                <h2>Customize QR Design</h2>
+                            </div>
+
+                            <!-- Quick Design Presets -->
+                            <div class="preset-templates-section">
+                                <label class="presets-label">Quick Design Presets</label>
+                                <div class="preset-templates" id="design-presets">
+                                    <button class="preset-theme-btn active" data-preset="default" type="button" title="Classic Theme">
+                                        <span class="theme-preview default"></span>
+                                        <span>Classic</span>
+                                    </button>
+                                    <button class="preset-theme-btn" data-preset="midnight-gold" type="button" title="Midnight Gold Theme">
+                                        <span class="theme-preview midnight-gold"></span>
+                                        <span>Midnight</span>
+                                    </button>
+                                    <button class="preset-theme-btn" data-preset="cyberpunk" type="button" title="Cyberpunk Theme">
+                                        <span class="theme-preview cyberpunk"></span>
+                                        <span>Cyberpunk</span>
+                                    </button>
+                                    <button class="preset-theme-btn" data-preset="emerald" type="button" title="Emerald Glass Theme">
+                                        <span class="theme-preview emerald"></span>
+                                        <span>Emerald</span>
+                                    </button>
+                                    <button class="preset-theme-btn" data-preset="ocean" type="button" title="Ocean Breeze Theme">
+                                        <span class="theme-preview ocean"></span>
+                                        <span>Ocean</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Accordion 1: Dots & Eyes Design -->
+                            <details class="style-section" open>
+                                <summary class="section-title">
+                                    <i class="ti ti-border-all"></i>
+                                    <span>Shape & Patterns</span>
+                                    <i class="ti ti-chevron-down accordion-arrow"></i>
+                                </summary>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label>Module / Dot Shape</label>
+                                        <div class="style-presets" id="dot-shape-presets">
+                                            <label class="preset-option">
+                                                <input type="radio" name="dot-shape" value="square" checked>
+                                                <span class="preset-box"><i class="ti ti-square"></i>Square</span>
+                                            </label>
+                                            <label class="preset-option">
+                                                <input type="radio" name="dot-shape" value="rounded">
+                                                <span class="preset-box"><i class="ti ti-app-window"></i>Rounded</span>
+                                            </label>
+                                            <label class="preset-option">
+                                                <input type="radio" name="dot-shape" value="circle">
+                                                <span class="preset-box"><i class="ti ti-circle"></i>Dots</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Finder Pattern (Eye) Shape</label>
+                                        <div class="style-presets" id="eye-shape-presets">
+                                            <label class="preset-option">
+                                                <input type="radio" name="eye-shape" value="square" checked>
+                                                <span class="preset-box"><i class="ti ti-square"></i>Square</span>
+                                            </label>
+                                            <label class="preset-option">
+                                                <input type="radio" name="eye-shape" value="rounded">
+                                                <span class="preset-box"><i class="ti ti-app-window"></i>Rounded</span>
+                                            </label>
+                                            <label class="preset-option">
+                                                <input type="radio" name="eye-shape" value="circle">
+                                                <span class="preset-box"><i class="ti ti-circle-dot"></i>Circle</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group half">
+                                            <label for="qr-size">QR Resolution</label>
+                                            <div class="select-wrapper">
+                                                <select id="qr-size">
+                                                    <option value="256">256 x 256 px</option>
+                                                    <option value="512" selected>512 x 512 px</option>
+                                                    <option value="1024">1024 x 1024 px</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group half">
+                                            <label for="qr-ecc">Error Correction</label>
+                                            <div class="select-wrapper">
+                                                <select id="qr-ecc">
+                                                    <option value="L">Low (7%)</option>
+                                                    <option value="M">Medium (15%)</option>
+                                                    <option value="Q">Quartile (25%)</option>
+                                                    <option value="H" selected>High (30% - Recommended for Logos)
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- Accordion 2: Color Customization -->
+                            <details class="style-section">
+                                <summary class="section-title">
+                                    <i class="ti ti-palette"></i>
+                                    <span>Colors & Gradients</span>
+                                    <i class="ti ti-chevron-down accordion-arrow"></i>
+                                </summary>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label>Fill Style</label>
+                                        <div class="style-presets" id="fill-style-presets">
+                                            <label class="preset-option">
+                                                <input type="radio" name="fill-style" value="solid" checked>
+                                                <span class="preset-box">Solid Color</span>
+                                            </label>
+                                            <label class="preset-option">
+                                                <input type="radio" name="fill-style" value="gradient">
+                                                <span class="preset-box">Gradient Fill</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Solid Color Picker Controls -->
+                                    <div class="form-group" id="solid-color-controls">
+                                        <label for="color-fg">QR Code Color</label>
+                                        <div class="color-picker-wrapper">
+                                            <input type="color" id="color-fg" value="#000000">
+                                            <input type="text" id="color-fg-text" class="color-hex-text" value="#000000"
+                                                placeholder="#000000">
+                                        </div>
+                                    </div>
+
+                                    <!-- Gradient Picker Controls -->
+                                    <div class="gradient-controls-container hidden" id="gradient-color-controls">
+                                        <div class="form-row">
+                                            <div class="form-group half">
+                                                <label for="color-grad-1">Color Start</label>
+                                                <div class="color-picker-wrapper">
+                                                    <input type="color" id="color-grad-1" value="#6366f1">
+                                                    <input type="text" id="color-grad-1-text" class="color-hex-text"
+                                                        value="#6366f1">
+                                                </div>
+                                            </div>
+                                            <div class="form-group half">
+                                                <label for="color-grad-2">Color End</label>
+                                                <div class="color-picker-wrapper">
+                                                    <input type="color" id="color-grad-2" value="#a855f7">
+                                                    <input type="text" id="color-grad-2-text" class="color-hex-text"
+                                                        value="#a855f7">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group half">
+                                                <label for="gradient-type">Gradient Direction</label>
+                                                <div class="select-wrapper">
+                                                    <select id="gradient-type">
+                                                        <option value="linear" selected>Linear</option>
+                                                        <option value="radial">Radial</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group half" id="gradient-angle-group">
+                                                <label for="gradient-angle">Angle: <span
+                                                        id="gradient-angle-val">135</span>°</label>
+                                                <input type="range" id="gradient-angle" min="0" max="360" value="135"
+                                                    class="custom-slider">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Custom Eye Colors -->
+                                    <div class="form-group">
+                                        <label class="checkbox-container">
+                                            <input type="checkbox" id="custom-eye-colors">
+                                            <span class="checkmark"></span>
+                                            Use Custom Finder Eye Colors
+                                        </label>
+                                    </div>
+
+                                    <div class="form-row hidden" id="eye-color-selectors">
+                                        <div class="form-group half">
+                                            <label for="color-eye-outer">Eye Outer Ring</label>
+                                            <div class="color-picker-wrapper">
+                                                <input type="color" id="color-eye-outer" value="#ec4899">
+                                                <input type="text" id="color-eye-outer-text" class="color-hex-text"
+                                                    value="#ec4899">
+                                            </div>
+                                        </div>
+                                        <div class="form-group half">
+                                            <label for="color-eye-inner">Eye Inner Pupil</label>
+                                            <div class="color-picker-wrapper">
+                                                <input type="color" id="color-eye-inner" value="#f43f5e">
+                                                <input type="text" id="color-eye-inner-text" class="color-hex-text"
+                                                    value="#f43f5e">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Background Color -->
+                                    <div class="form-group">
+                                        <label for="color-bg">Background Color</label>
+                                        <div class="color-picker-wrapper">
+                                            <input type="color" id="color-bg" value="#ffffff">
+                                            <input type="text" id="color-bg-text" class="color-hex-text"
+                                                value="#ffffff">
+                                        </div>
+                                        <div class="form-group margin-top-xs">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="transparent-bg">
+                                                <span class="checkmark"></span>
+                                                Transparent Background (PNG/SVG export only)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- Accordion 3: Logo Overlay Options -->
+                            <details class="style-section">
+                                <summary class="section-title">
+                                    <i class="ti ti-photo"></i>
+                                    <span>Center Logo Overlay</span>
+                                    <i class="ti ti-chevron-down accordion-arrow"></i>
+                                </summary>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label>Logo Selection</label>
+                                        <div class="logo-presets">
+                                            <label class="logo-preset-option">
+                                                <input type="radio" name="logo-option" value="none" checked>
+                                                <span class="preset-box"><i class="ti ti-ban"></i>None</span>
+                                            </label>
+                                            <label class="logo-preset-option">
+                                                <input type="radio" name="logo-option" value="wifi">
+                                                <span class="preset-box"><i class="ti ti-wifi"></i>WiFi Icon</span>
+                                            </label>
+                                            <label class="logo-preset-option">
+                                                <input type="radio" name="logo-option" value="custom">
+                                                <span class="preset-box"><i class="ti ti-upload"></i>Upload</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group hidden" id="custom-logo-uploader">
+                                        <label for="logo-file" class="custom-file-upload">
+                                            <i class="ti ti-cloud-upload"></i> Choose Custom Image (PNG/JPG)
+                                        </label>
+                                        <input type="file" id="logo-file" accept="image/png, image/jpeg">
+                                        <span id="custom-logo-name" class="uploaded-filename">No file selected</span>
+                                    </div>
+
+                                    <div class="logo-customizers hidden" id="logo-controls">
+                                        <div class="form-row">
+                                            <div class="form-group half">
+                                                <label for="logo-size">Logo Size: <span
+                                                        id="logo-size-val">20</span>%</label>
+                                                <input type="range" id="logo-size" min="10" max="30" value="20"
+                                                    class="custom-slider">
+                                            </div>
+                                            <div class="form-group half flex-center">
+                                                <label class="checkbox-container">
+                                                    <input type="checkbox" id="logo-clear-bg" checked>
+                                                    <span class="checkmark"></span>
+                                                    Clear QR Background behind Logo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                            
+                            <!-- Reset Design Button -->
+                            <div class="padding-top-md text-center" style="border-top: 1px solid var(--glass-border); margin-top: 16px; display: flex; justify-content: flex-end;">
+                                <button class="btn btn-outline btn-sm" id="btn-reset-design" type="button">
+                                    <i class="ti ti-rotate"></i> Reset Design to Default
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Canvas Live Preview and Exports -->
+                    <div class="preview-column">
+                        <div class="glass-card sticky-preview">
+                            <div class="card-header">
+                                <h2>QR Code</h2>
+                                <span class="live-indicator"><span class="pulse-dot"></span>Real-time</span>
+                            </div>
+
+                            <div class="qr-preview-box">
+                                <div class="qr-canvas-container" id="qr-wrapper">
+                                    <canvas id="qr-canvas"></canvas>
+                                </div>
+                                <div class="wifi-string-display">
+                                    <div class="display-title">Decoded QR Payload String</div>
+                                    <div class="wifi-code-text" id="wifi-string-text">WIFI:S:My WiFi
+                                        Network;T:WPA;P:supersecure123;;</div>
+                                </div>
+                            </div>
+
+                            <div class="action-grid">
+                                <button class="btn btn-primary" id="save-history-btn">
+                                    <i class="ti ti-bookmark"></i> Save Profile
+                                </button>
+                                <button class="btn btn-secondary" id="btn-print">
+                                    <i class="ti ti-printer"></i> Print / PDF
+                                </button>
+                            </div>
+
+                            <div class="downloads-title">Export Options</div>
+                            <div class="download-grid">
+                                <button class="btn btn-outline" id="btn-download-png">
+                                    <i class="ti ti-file-download"></i> PNG
+                                </button>
+                                <button class="btn btn-outline" id="btn-download-svg">
+                                    <i class="ti ti-code"></i> SVG
+                                </button>
+                                <button class="btn btn-outline" id="btn-copy-image" title="Copy QR image to clipboard">
+                                    <i class="ti ti-copy"></i> Copy Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: SCAN & DECODE -->
+            <section id="tab-scan" class="tab-content">
+                <div class="scanner-container">
+                    <div class="workspace-grid">
+                        <!-- Left Pane: Drop & Upload -->
+                        <div class="scanner-actions-pane">
+                            <div class="glass-card scanner-card">
+                                <div class="card-header">
+                                    <h2>Scan QR Code Image</h2>
+                                </div>
+                                <p class="card-description">Drag and drop a QR code image here or upload it from your
+                                    computer to decode it instantly.</p>
+
+                                <div class="drop-zone" id="scan-drop-zone">
+                                    <i class="ti ti-cloud-upload upload-icon"></i>
+                                    <p class="drop-text">Drag & Drop QR Image here</p>
+                                    <p class="drop-or">or</p>
+                                    <label for="scan-file-input" class="btn btn-primary btn-sm">
+                                        <i class="ti ti-file-search"></i> Choose File
+                                    </label>
+                                    <input type="file" id="scan-file-input" accept="image/*" class="hidden">
+                                </div>
+
+                                <div class="camera-cta-divider">
+                                    <span>OR</span>
+                                </div>
+
+                                <button class="btn btn-secondary w-full" id="start-camera-btn">
+                                    <i class="ti ti-camera"></i> Scan with Device Camera
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Pane: Scan Result -->
+                        <div class="scanner-results-pane">
+                            <div class="glass-card scanner-card h-full flex-column justify-between">
+                                <div>
+                                    <div class="card-header">
+                                        <h2>Scan Result</h2>
+                                    </div>
+
+                                    <div id="scan-result-placeholder" class="scan-placeholder">
+                                        <i class="ti ti-qrcode-scan scan-icon-placeholder"></i>
+                                        <p>No QR Code scanned yet. Upload an image or use your camera to see content details.</p>
+                                    </div>
+
+                                    <div id="scan-result-card" class="result-details hidden">
+                                        <div class="success-banner" id="scan-success-banner">
+                                            <i class="ti ti-circle-check"></i> WiFi Network Detected!
+                                        </div>
+
+                                        <!-- WiFi Result Details -->
+                                        <div class="result-grid" id="scan-res-wifi">
+                                            <div class="result-item">
+                                                <div class="result-label">Network Name (SSID)</div>
+                                                <div class="result-value" id="result-ssid">-</div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Password</div>
+                                                <div class="result-value pwd-field" id="result-pwd-wrapper">
+                                                    <span id="result-password">-</span>
+                                                    <button class="pwd-toggle" id="result-pwd-toggle"><i class="ti ti-eye"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Security Type</div>
+                                                <div class="result-value" id="result-security">-</div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Hidden Network</div>
+                                                <div class="result-value" id="result-hidden">-</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- URL Result Details -->
+                                        <div class="result-grid hidden" id="scan-res-url">
+                                            <div class="result-item">
+                                                <div class="result-label">Website URL</div>
+                                                <div class="result-value"><a href="#" id="result-url" target="_blank" style="color: var(--accent-primary); text-decoration: none; word-break: break-all;">-</a></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Text Result Details -->
+                                        <div class="result-grid hidden" id="scan-res-text">
+                                            <div class="result-item">
+                                                <div class="result-label">Plain Text Content</div>
+                                                <div class="result-value" id="result-text" style="white-space: pre-wrap; font-weight: normal; font-family: inherit; font-size: 14px;">-</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Contact Result Details -->
+                                        <div class="result-grid hidden" id="scan-res-contact">
+                                            <div class="result-item">
+                                                <div class="result-label">Contact Name</div>
+                                                <div class="result-value" id="result-contact-name">-</div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Phone</div>
+                                                <div class="result-value" id="result-contact-phone">-</div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Email</div>
+                                                <div class="result-value" id="result-contact-email">-</div>
+                                            </div>
+                                            <div class="result-item">
+                                                <div class="result-label">Website</div>
+                                                <div class="result-value" id="result-contact-website">-</div>
+                                            </div>
+                                            <div class="result-item" style="grid-column: 1 / -1;">
+                                                <div class="result-label">Address</div>
+                                                <div class="result-value" id="result-contact-address">-</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="wifi-string-display">
+                                            <div class="display-title" id="scan-payload-title">Raw QR Payload</div>
+                                            <div class="wifi-code-text" id="result-raw-payload">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="scan-actions" class="hidden padding-top-md">
+                                    <div class="action-grid">
+                                        <button class="btn btn-outline" id="btn-scan-action-primary">
+                                            <i class="ti ti-copy"></i> Copy Password
+                                        </button>
+                                        <button class="btn btn-outline hidden" id="btn-scan-action-secondary">
+                                            <i class="ti ti-download"></i> Save Contact (.vcf)
+                                        </button>
+                                        <button class="btn btn-primary" id="btn-load-generator">
+                                            <i class="ti ti-external-link"></i> Load in Editor
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Camera Scanning Modal overlay -->
+                <div class="camera-modal" id="camera-modal">
+                    <div class="camera-modal-content">
+                        <div class="modal-header">
+                            <h3>Camera Scanner</h3>
+                            <button class="modal-close-btn" id="close-camera-btn">&times;</button>
+                        </div>
+                        <div class="camera-viewfinder-container">
+                            <video id="camera-video" playsinline></video>
+                            <canvas id="camera-canvas" class="hidden"></canvas>
+                            <div class="scanner-laser"></div>
+                            <div class="scanner-guide-corners">
+                                <div class="corner top-left"></div>
+                                <div class="corner top-right"></div>
+                                <div class="corner bottom-left"></div>
+                                <div class="corner bottom-right"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <p class="modal-instruction">Point your camera at a QR Code to scan it.</p>
+                            <div class="form-group flex-center">
+                                <label for="camera-select" class="margin-right-sm">Select Camera:</label>
+                                <div class="select-wrapper select-sm">
+                                    <select id="camera-select">
+                                        <option value="">Loading cameras...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: HISTORY -->
+            <section id="tab-history" class="tab-content">
+                <div class="history-container">
+                    <div class="glass-card">
+                        <div class="card-header justify-between">
+                            <div>
+                                <h2>Saved QR Profiles</h2>
+                                <p class="card-description">Profiles are stored locally on your device. Switch sub-tabs to see your saved templates or scanned items history.</p>
+                            </div>
+                            <button class="btn btn-danger btn-sm" id="btn-clear-history">
+                                <i class="ti ti-trash"></i> Clear All
+                            </button>
+                        </div>
+
+                        <div class="history-tabs-container">
+                            <div class="history-tab-header">
+                                <button class="history-tab-btn active" data-subtab="generated" type="button">
+                                    <i class="ti ti-qrcode"></i> My Saved Profiles
+                                </button>
+                                <button class="history-tab-btn" data-subtab="scanned" type="button">
+                                    <i class="ti ti-history"></i> Scanned QR Logs
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="history-empty" class="history-empty-state">
+                            <i class="ti ti-bookmark-off"></i>
+                            <p>No saved profiles found. Start creating and saving your custom QR codes!</p>
+                        </div>
+
+                        <div id="scan-history-empty" class="history-empty-state hidden">
+                            <i class="ti ti-qrcode-scan"></i>
+                            <p>No scan history logs found. Scan a QR code using camera or image file to save it here!</p>
+                        </div>
+
+                        <div class="history-grid" id="history-items-grid">
+                            <!-- Dynamically populated -->
+                        </div>
+
+                        <div class="history-grid hidden" id="scan-history-grid">
+                            <!-- Dynamically populated scanned logs -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>SPK QR — by Shahriar.</p>
+        </footer>
+    </div>
+
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <!-- jsQR Library for Scanner -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- Main JS Application Controller -->
+    <script src="app.js"></script>
+</body>
+
+</html>
