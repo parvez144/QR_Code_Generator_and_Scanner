@@ -2,7 +2,7 @@
 :root {
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --font-mono: 'Space Mono', monospace;
-    
+
     /* Transitions */
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -18,31 +18,31 @@
 
 /* Dark Theme Variables */
 [data-theme="dark"] {
-    --bg-primary: #121214;
-    --bg-secondary: #1c1c1f;
-    --glass-bg: rgba(28, 28, 31, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-border-focus: rgba(99, 102, 241, 0.4);
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --glass-bg: #1e1e1e;
+    --glass-border: #2c2c2c;
+    --glass-border-focus: #444444;
     
-    --text-primary: #f4f4f5;
+    --text-primary: #e4e4e7;
     --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
+    --text-muted: #52525b;
     
     --accent-primary: #6366f1;
     --accent-secondary: #a855f7;
     --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
-    --accent-glow: rgba(99, 102, 241, 0.2);
+    --accent-glow: rgba(99, 102, 241, 0.15);
     
-    --input-bg: rgba(18, 18, 20, 0.6);
-    --input-border: rgba(255, 255, 255, 0.1);
+    --input-bg: #121212;
+    --input-border: #2c2c2c;
     
     --success: #10b981;
     --success-glow: rgba(16, 185, 129, 0.15);
     --danger: #f43f5e;
     --danger-glow: rgba(244, 63, 94, 0.15);
     
-    --glow-color-1: rgba(99, 102, 241, 0.12);
-    --glow-color-2: rgba(168, 85, 247, 0.1);
+    --glow-color-1: transparent;
+    --glow-color-2: transparent;
 }
 
 /* Light Theme Variables */
@@ -95,26 +95,11 @@ body {
 
 /* Ambient Backdrop Glows */
 .glow-bg {
-    position: fixed;
-    width: 60vw;
-    height: 60vw;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--glow-color-1) 0%, rgba(0,0,0,0) 70%);
-    top: -20vw;
-    left: -10vw;
-    z-index: -1;
-    filter: blur(80px);
-    pointer-events: none;
-    animation: floatGlow 12s ease-in-out infinite alternate;
+    display: none !important;
 }
 
 .glow-bg.second {
-    background: radial-gradient(circle, var(--glow-color-2) 0%, rgba(0,0,0,0) 70%);
-    top: auto;
-    bottom: -20vw;
-    right: -10vw;
-    left: auto;
-    animation: floatGlowSecond 15s ease-in-out infinite alternate;
+    display: none !important;
 }
 
 @keyframes floatGlow {
@@ -147,7 +132,6 @@ body {
     padding: 16px 24px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--box-shadow-glass);
 }
@@ -203,7 +187,6 @@ body {
     gap: 8px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
     padding: 6px;
     border-radius: var(--border-radius-md);
     margin-bottom: 24px;
@@ -268,7 +251,6 @@ body {
 .glass-card {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
     border-radius: var(--border-radius-lg);
     padding: 24px;
     box-shadow: var(--box-shadow-glass);
@@ -1637,7 +1619,6 @@ input.invalid, textarea.invalid, select.invalid {
     background: var(--bg-secondary);
     border: 1px solid var(--glass-border);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.04);
-    backdrop-filter: blur(20px);
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
