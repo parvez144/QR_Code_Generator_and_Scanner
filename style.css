@@ -1479,7 +1479,7 @@ input.contact-input {
     
     /* Add a custom print details card only shown during print */
     .qr-preview-box::after {
-        content: "Network: " attr(data-ssid) "\a Security: " attr(data-security) "\a Password: " attr(data-password);
+        content: attr(data-print-details);
         white-space: pre-wrap;
         margin-top: 30px;
         font-size: 16px;

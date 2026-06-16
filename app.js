@@ -747,24 +747,25 @@ function generateQRCode() {
     // Set print parameters on container for printer stylesheet
     const previewBox = document.querySelector('.qr-preview-box');
     const type = getSelectedQRType();
+    let printDetails = '';
     if (type === 'wifi') {
         const securitySelectText = wifiSecurity.options[wifiSecurity.selectedIndex].text;
-        previewBox.setAttribute('data-ssid', wifiSsid.value);
-        previewBox.setAttribute('data-security', securitySelectText);
-        previewBox.setAttribute('data-password', wifiSecurity.value !== 'nopass' ? wifiPassword.value : 'No Password (Open)');
+        printDetails = `WiFi SSID: ${wifiSsid.value}\nSecurity: ${securitySelectText}`;
+        if (wifiSecurity.value !== 'nopass' && wifiPassword.value) {
+            printDetails += `\nPassword: ${wifiPassword.value}`;
+        }
     } else if (type === 'url') {
-        previewBox.setAttribute('data-ssid', 'Website Link');
-        previewBox.setAttribute('data-security', 'URL');
-        previewBox.setAttribute('data-password', qrUrl.value);
+        printDetails = `Website Link (URL):\n${qrUrl.value}`;
     } else if (type === 'text') {
-        previewBox.setAttribute('data-ssid', 'Plain Text');
-        previewBox.setAttribute('data-security', 'Text');
-        previewBox.setAttribute('data-password', qrText.value);
+        printDetails = `Plain Text Content:\n${qrText.value}`;
     } else if (type === 'contact') {
-        previewBox.setAttribute('data-ssid', 'Contact Card');
-        previewBox.setAttribute('data-security', 'vCard');
-        previewBox.setAttribute('data-password', `${contactFirstName.value} ${contactLastName.value}`);
+        printDetails = `Contact Card (vCard)\nName: ${contactFirstName.value} ${contactLastName.value}`.trim();
+        if (contactPhone.value.trim()) printDetails += `\nPhone: ${contactPhone.value.trim()}`;
+        if (contactEmail.value.trim()) printDetails += `\nEmail: ${contactEmail.value.trim()}`;
+        if (contactWebsite.value.trim()) printDetails += `\nWebsite: ${contactWebsite.value.trim()}`;
+        if (contactAddress.value.trim()) printDetails += `\nAddress: ${contactAddress.value.trim()}`;
     }
+    previewBox.setAttribute('data-print-details', printDetails);
 
     // Parse options
     const targetSize = parseInt(qrSizeSelect.value);
